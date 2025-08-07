@@ -10,7 +10,7 @@
     --font-body: 'Roboto', sans-serif;
 }
 
-/* --- Base & Layout --- */
+/* Base & Layout */
 body {
     background-color: var(--bg-color);
     font-family: var(--font-body);
@@ -38,7 +38,7 @@ main {
     padding: 25px;
 }
 
-/* --- Navigation / Tabs --- */
+/* Navigation / Tabs */
 nav {
     display: flex;
     background-color: #fff;
@@ -71,7 +71,7 @@ nav {
     color: var(--accent-color);
 }
 
-/* --- Page Content Styling --- */
+/* Page Content Styling */
 .page-content {
     display: none; 
     animation: fadeIn 0.5s ease;
@@ -144,7 +144,7 @@ textarea { width: 100%; min-height: 120px; border: 1px solid #ddd; border-radius
     100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
 }
 
-/* --- Footer --- */
+/* Footer */
 footer {
     text-align: center;
     padding: 20px;
@@ -156,4 +156,15 @@ footer a {
     color: var(--text-color);
     text-decoration: none;
     margin: 0 5px;
+}
+
+/* Analysis Result Colors*/
+.analysis-result.safe {
+    color: var(--highlight-color); /* Teal for Safe */
+}
+.analysis-result.warning {
+    color: #f39c12; /* A warning orange */
+}
+.analysis-result.high-risk {
+    color: var(--accent-color); /* Coral/Red for High Risk */
 }
