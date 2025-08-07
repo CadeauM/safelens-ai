@@ -86,7 +86,7 @@ nav {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- General Element Styling --- */
+/*General Element Styling */
 h1, h2 {
     font-family: var(--font-heading);
     color: var(--heading-color);
@@ -115,7 +115,7 @@ button:hover {
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* --- Component-Specific Styles --- */
+/*Component-Specific Styles*/
 /* Home Page */
 .hero-content { text-align: center; }
 .hero-image { width: 100px; height: 100px; margin-bottom: 20px; }
