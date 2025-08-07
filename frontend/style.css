@@ -1,0 +1,159 @@
+:root {
+    --primary-color: #9B59B6; /* Purple */
+    --accent-color: #FF6B6B;  /* Coral */
+    --highlight-color: #1ABC9C; /* Teal */
+    --bg-color: #FFF8F1;      /* Soft Off-White */
+    --text-color: #555;
+    --heading-color: #333;
+    --card-bg-color: #FFFFFF;
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+}
+
+/* --- Base & Layout --- */
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-body);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 450px; /* Mobile first feel */
+    background-color: var(--card-bg-color);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    padding: 25px;
+}
+
+/* --- Navigation / Tabs --- */
+nav {
+    display: flex;
+    background-color: #fff;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-link {
+    flex-grow: 1;
+    text-align: center;
+    padding: 10px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #f5f5f5;
+}
+
+.nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.nav-link.emergency-link {
+    color: var(--accent-color);
+}
+
+/* --- Page Content Styling --- */
+.page-content {
+    display: none; 
+    animation: fadeIn 0.5s ease;
+}
+
+.page-content.active {
+    display: block; /* Shown when active */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- General Element Styling --- */
+h1, h2 {
+    font-family: var(--font-heading);
+    color: var(--heading-color);
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    line-height: 1.6;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* --- Component-Specific Styles --- */
+/* Home Page */
+.hero-content { text-align: center; }
+.hero-image { width: 100px; height: 100px; margin-bottom: 20px; }
+.cta-button { background-color: var(--primary-color); color: white; }
+
+/* Voice & Text Scan */
+.voice-scanner { text-align: center; margin: 30px 0; }
+.mic-button { background-color: #f5f5f5; border-radius: 50%; width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; margin: 0 auto; color: var(--primary-color); }
+.mic-button:hover { background-color: #e0e0e0; }
+.scan-status { margin-top: 15px; font-style: italic; }
+textarea { width: 100%; min-height: 120px; border: 1px solid #ddd; border-radius: 12px; padding: 15px; font-family: var(--font-body); margin-bottom: 15px; box-sizing: border-box; }
+#analyze-text-btn { background-color: var(--highlight-color); color: white; }
+.analysis-result { text-align: center; margin-top: 20px; font-size: 1.2em; font-weight: 600; }
+
+/* Settings Page */
+.setting-item { margin-bottom: 20px; }
+.setting-item label { display: block; margin-bottom: 8px; font-weight: 600; }
+.setting-item input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+#save-settings-btn { background-color: var(--highlight-color); color: white; }
+
+/* Emergency Page */
+.emergency-button { background-color: var(--accent-color); color: white; font-size: 1.2em; padding: 20px; animation: pulse 2s infinite; }
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 107, 107, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-size: 0.9em;
+}
+
+footer a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 5px;
+}
