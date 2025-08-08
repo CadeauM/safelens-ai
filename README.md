@@ -74,7 +74,7 @@ SafeLens acts like a calculator—but has life-saving power beneath it.
 - (Optional) [Twilio](https://www.twilio.com/try-twilio)
 
 ### 1. Clone Repo
-bash
+```bash
 git clone (https://github.com/CadeauM/safelens-ai.git)
 
 cd safelens/backend
@@ -82,15 +82,17 @@ cd safelens/backend
 
 
 ### 2. Set Up Environment
-bash
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install fastapi "uvicorn[standard]" python-dotenv
+```bash
+- python -m venv venv
+
+- source venv/bin/activate  # or venv\Scripts\activate on Windows
+
+- pip install fastapi "uvicorn[standard]" python-dotenv
 
 ### 3. Run Backend
-bash
-uvicorn main:app --reload
+```bash
+- uvicorn main:app --reload
 
 ### 4. Open Public Tunnel
-bash
-ngrok http 8000
+```bash
+- ngrok http 8000
