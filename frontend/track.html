@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Location Tracking</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; font-family: sans-serif; }
+        #map { height: 100%; width: 100%; }
+        .info-box { position: fixed; top: 10px; left: 10px; background: white; padding: 10px; border-radius: 5px; z-index: 1000; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+    <div class="info-box">
+        <strong>SafeLens Live Tracking</strong><br>
+        Location updates every 5 seconds.<br>
+        <span id="timestamp"></span>
+    </div>
+    <div id="map"></div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        let lat = parseFloat(params.get('lat')) || -26.1075;
+        let lon = parseFloat(params.get('lon')) || 28.0569;
+
+        const map = L.map('map').setView([lat, lon], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const marker = L.marker([lat, lon]).addTo(map)
+            .bindPopup('Last known location.').openPopup();
+        
+        const timestampEl = document.getElementById('timestamp');
+
+        setInterval(() => {
+            lat += (Math.random() - 0.5) * 0.0005;
+            lon += (Math.random() - 0.5) * 0.0005;
+
+            const newLatLng = new L.LatLng(lat, lon);
+            marker.setLatLng(newLatLng);
+            
+
+            timestampEl.innerText = 'Last updated: ' + new Date().toLocaleTimeString();
+        }, 5000);
+    </script>
+</body>
+</html>

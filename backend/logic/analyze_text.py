@@ -56,5 +56,5 @@ def analyze_text(text: str):
     return {
         "label": label,
         "score": round(risk_score, 1),
-        "keywords_detected": words_found if words_found else "None"
+        "keywords_detected": words_found if words_found else ["None"]
     }

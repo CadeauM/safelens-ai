@@ -3,94 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeLens - You are safe here.</title>
-
-    <!-- Google Fonts -->
+    <title>Calculator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Our Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- Main Navigation (Tabs) -->
-        <nav>
-            <a href="#home" class="nav-link active">Home</a>
-            <a href="#voice" class="nav-link">Voice Scan</a>
-            <a href="#text" class="nav-link">Text Scan</a>
-            <a href="#settings" class="nav-link">Settings</a>
-            <a href="#emergency" class="nav-link emergency-link">Emergency</a>
-        </nav>
-
-        <!-- Main Content Area -->
-        <main>
-            <!-- Home/Welcome Page -->
-            <section id="home" class="page-content active">
-                <div class="hero-content">
-                    <img src="https://svgshare.com/i/186m.svg" alt="Protective Shield Icon" class="hero-image">
-                    <h1>You are safe here.</h1>
-                    <p>SafeLens is your private companion for detecting distress and empowering you to get help, discreetly.</p>
-                    <button class="cta-button" data-target="voice">Start a Safe Session</button>
-                </div>
-            </section>
-
-            <!-- Voice Scan Page -->
-            <section id="voice" class="page-content">
-                <h2>Voice Analysis</h2>
-                <p>We're listening for your safety. Press the icon to begin.</p>
-                <div class="voice-scanner">
-                    <button id="record-btn" class="mic-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-mic-fill" viewBox="0 0 16 16"><path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0z"/><path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"/></svg>
-                    </button>
-                    <div id="voice-status" class="scan-status">Status: Idle</div>
-                </div>
-                <div id="voice-result" class="analysis-result"></div>
-            </section>
-
-            <!-- Text Scan Page -->
-            <section id="text" class="page-content">
-                <h2>Text Analysis</h2>
-                <p>Paste a conversation or messages to check for red flags.</p>
-                <textarea id="text-input" placeholder="Your text here..."></textarea>
-                <button id="analyze-text-btn">Analyze Text</button>
-                <div id="text-result" class="analysis-result"></div>
-            </section>
-
-            <!-- Settings/Trigger Phrase Page -->
-            <section id="settings" class="page-content">
-                <h2>Safety Settings</h2>
-                <div class="setting-item">
-                    <label for="trigger-phrase">Your Custom Trigger Phrase</label>
-                    <input type="text" id="trigger-phrase" value="I need to make tea">
-                </div>
-                <div class="setting-item">
-                    <label for="trusted-contact">Trusted Contact's Phone Number</label>
-                    <input type="tel" id="trusted-contact" placeholder="+1 (555) 123-4567">
-                </div>
-                <button id="save-settings-btn">Save Settings</button>
-            </section>
-
-            <!-- Emergency Page -->
-            <section id="emergency" class="page-content">
-                <h2>Emergency Alert</h2>
-                <p>Pressing this button will immediately send an alert with your location to your trusted contact.</p>
-                <button id="panic-btn" class="emergency-button">SEND ALERT NOW</button>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer>
-            <a href="#">Privacy</a> | 
-            <a href="#">Help</a> | 
-            <a href="#">Contact</a> | 
-            <a href="#">Exit</a>
-        </footer>
-    </div>
+    <div class="master-container">
     
-    <!-- Our JavaScript File -->
+        <!-- VIEW 1: Calculator -->
+        <div id="calculator-view" class="view active">
+            <div class="calculator">
+                <div class="calculator-display">0</div>
+                <div class="calculator-keys">
+                    <button class="key-op" data-key="clear">C</button><button class="key-op" data-key="sign">+/-</button><button class="key-op" data-key="percent">%</button><button class="key-op" data-key="divide">÷</button>
+                    <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button><button class="key-op" data-key="multiply">×</button>
+                    <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button><button class="key-op" data-key="subtract">−</button>
+                    <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button><button class="key-op" data-key="add">+</button>
+                    <button class="key-zero" data-key="0">0</button><button data-key=".">.</button><button class="key-equal" data-key="=">=</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: SafeLens App -->
+        <div id="safelens-view" class="view">
+            <div class="app-container">
+                <nav>
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#voice" class="nav-link">Voice Scan</a>
+                    <a href="#support" class="nav-link">Support Hub</a> 
+                    <a href="#alert-setup" class="nav-link">Alert Setup</a>
+                    <a href="#" id="lock-app-btn" class="nav-link silent-mode-link">Lock App</a> 
+                </nav>
+                <main>
+                    <section id="home" class="page-content active">
+                        <div class="hero-content">
+
+                            <svg class="hero-image" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 22S19 18 19 12V5L12 2L5 5V12C5 18 12 22 12 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            
+                            <h1>You are safe here.</h1>
+                            <p>SafeLens is your private companion for detecting distress and empowering you to get help, discreetly.</p>
+                            <button class="cta-button" data-target="voice">Start an Analysis Session</button>
+                        </div>
+                    </section>
+
+                    <section id="voice" class="page-content">
+                        <h2>Voice Analysis</h2>
+                        <p>We're listening for your safety. Press the icon to begin.</p>
+                        <div class="voice-scanner">
+                            <button id="record-btn" class="mic-button" aria-label="Start recording">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16"><path d="M5 3a3 3 0 0 1 6 0v5a3 3 0 0 1-6 0z"/><path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"/></svg>
+                            </button>
+                            <div class="scan-status">Status: <span id="voice-status">Idle</span></div>
+                        </div>
+                        <div id="voice-result" class="analysis-result"></div>
+                    </section>
+                    <section id="support" class="page-content">
+                        <h2>Your Action Plan & Resources</h2>
+                        <p>Here are practical steps you can take to increase your safety. <br><em>This is not a substitute for professional legal or psychological advice.</em></p>
+                        <div class="action-tabs">
+                            <button class="action-tab active" data-target="#immediate-steps">Immediate Safety</button>
+                            <button class="action-tab" data-target="#documenting">Documenting</button>
+                            <button class="action-tab" data-target="#planning">Safety Plan</button>
+                            <button class="action-tab" data-target="#resources">Helplines</button>
+                        </div>
+                        <div class="action-content">
+                            <div id="immediate-steps" class="action-panel active">
+                                <h3>Steps to Take Right Now</h3>
+                                <ul><li><strong>Go to a safe place:</strong> If possible, go to a room with a lock, or leave the house and go to a trusted friend, family member, or public place.</li><li><strong>Contact someone you trust:</strong> Let them know where you are and what is happening. Use this app's panic trigger if you are in danger.</li><li><strong>Call emergency services:</strong> If you feel your life is in immediate danger, call your local emergency number (e.g., 911, 112, 999).</li></ul>
+                            </div>
+                            <div id="documenting" class="action-panel">
+                                <h3>How to Document Abuse Safely</h3>
+                                <ul><li><strong>Use this app's voice scan:</strong> If you can do so safely, record verbal abuse. The files are stored on our secure server, not visibly on your phone.</li><li><strong>Keep a private journal:</strong> Write down dates, times, what happened, and how you felt. Be specific. Store it in a safe place.</li><li><strong>Save messages:</strong> Take screenshots of threatening or abusive text messages, emails, or social media posts. Back them up to a secure cloud service only you can access.</li><li><strong>Photograph injuries:</strong> If you are physically harmed, take photos of any injuries as soon as possible.</li></ul>
+                            </div>
+                            <div id="planning" class="action-panel">
+                                <h3>Creating a Long-Term Safety Plan</h3>
+                                <ul><li><strong>Pack an "escape bag":</strong> Keep a bag with essential items (ID, keys, money, medication, important documents) in a safe, hidden place or with a trusted friend.</li><li><strong>Establish a code word:</strong> Create a secret word or phrase you can use with friends or family to let them know you're in danger without alerting the abuser.</li><li><strong>Secure important documents:</strong> Make copies of birth certificates, passports, bank account information, and other vital records.</li><li><strong>Plan your escape route:</strong> Know the safest way out of your home from different rooms.</li></ul>
+                            </div>
+                            <div id="resources" class="action-panel">
+                                <h3>Professional Helplines & Resources</h3>
+                                <div class="resource-category"><h4>Emotional &amp; Mental Health Support</h4><ul><li><a href="https://www.thehotline.org/" target="_blank">National Domestic Violence Hotline</a></li><li><a href="https://www.rainn.org/" target="_blank">RAINN Crisis Support</a></li></ul></div>
+                                <div class="resource-category"><h4>Legal &amp; Rights Assistance</h4><ul><li><a href="https://www.womenslaw.org/" target="_blank">Women's Law - Legal Information</a></li><li><a href="https://www.probono.net/" target="_blank">Find a Pro Bono Lawyer</a></li></ul></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="alert-setup" class="page-content">
+                        <h2>Emergency Alert Setup</h2>
+                        <div class="setting-item">
+                            <label for="alert-message">Custom Alert Message</label>
+                            <textarea id="alert-message">I need help! I've triggered my SafeLens alert. Please check on me.</textarea>
+                        </div>
+                        <div class="setting-item">
+                            <label>Your Trusted Contacts</label>
+                            <div id="trusted-contacts-list"></div>
+                            <div class="add-contact-form">
+                                <input type="text" id="new-contact-name" placeholder="Name (e.g., Mom)">
+                                <input type="tel" id="new-contact-phone" placeholder="Phone Number (+1... / +27..)">
+                                <button id="add-contact-btn">Add Contact</button>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+                <footer class="app-footer">
+                    <a href="#">Privacy</a> | <a href="#">Help</a> | <a href="#">Contact</a>
+                </footer>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

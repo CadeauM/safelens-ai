@@ -24,6 +24,11 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+backend/uploads/
+
+# Secrets
+backend/config.py
+.env
 
 # PyInstaller
 *.manifest
