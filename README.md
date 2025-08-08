@@ -75,7 +75,8 @@ SafeLens acts like a calculator—but has life-saving power beneath it.
 
 ### 1. Clone Repo
 bash
-git clone https://github.com/your-username/safelens.git
+git clone (https://github.com/CadeauM/safelens-ai.git)
+
 cd safelens/backend
 
 
