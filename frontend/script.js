@@ -1,4 +1,3 @@
-const API_URL = ""; 
 const UNLOCK_CODE = '1111';
 const PANIC_CODE = '222';
 
@@ -29,8 +28,7 @@ const App = {
     },
     
     /**
-     * Finds all the important HTML elements on the page and saves them
-     * in the `this.elements` object for easy access.
+     * Finds all important HTML elements and saves them for easy access.
      */
     cacheDOMElements() {
         this.elements = {
@@ -49,29 +47,28 @@ const App = {
             alertMessageInput: document.getElementById('alert-message'),
             recordBtn: document.getElementById('record-btn'),
             voiceStatus: document.getElementById('voice-status'),
+            saveForm: document.getElementById('save-form'),
+            recordingNoteInput: document.getElementById('recording-note'),
+            saveToVaultBtn: document.getElementById('save-to-vault-btn'),
+            vaultList: document.getElementById('vault-list'),
         };
     },
 
     /**
-     * Attaches all the interactive event listeners (clicks, etc.)
-     * to the app's features.
+     * Attaches all the interactive event listeners (clicks, etc.).
      */
     initCoreAppListeners() {
         this.elements.navLinks.forEach(link => { link.addEventListener('click', e => { e.preventDefault(); this.showPage(link.getAttribute('href')); }); });
         this.elements.ctaButton?.addEventListener('click', () => { this.showPage('#' + this.elements.ctaButton.dataset.target); });
         this.elements.lockAppBtn.addEventListener('click', e => { e.preventDefault(); this.lockApp(); });
-        
         this.initVoiceAnalysis();
         this.initContactManagement();
         this.initSupportHubTabs();
         this.initCalculator();
     },
 
-    // --- 4. CORE APP LOGIC ---
+    // --- 4. CORE APP LOGIC & VIEW MANAGEMENT ---
 
-    /**
-     * Switches between the calculator disguise and the main app view.
-     */
     updateView() {
         if (this.state.isUnlocked) {
             this.elements.calculatorView.classList.remove('active');
@@ -86,18 +83,11 @@ const App = {
         }
     },
 
-    /**
-     * Locks the app and returns to the calculator disguise.
-     */
     lockApp() {
         this.state.isUnlocked = false;
         this.updateView();
     },
 
-    /**
-     * Handles navigation between the pages (Home, Voice Scan, etc.).
-     * @param {string} pageId - The ID of the page to show (e.g., '#home').
-     */
     showPage(pageId) {
         if (!pageId || !pageId.startsWith('#')) return;
         this.elements.pages.forEach(page => page.classList.remove('active'));
@@ -106,11 +96,9 @@ const App = {
         if (targetPage) targetPage.classList.add('active');
         const targetLink = document.querySelector(`a[href="${pageId}"]`);
         if (targetLink) targetLink.classList.add('active');
+        if (pageId === '#vault') { this.renderVault(); }
     },
-
-    /**
-     * Powers the interactive tabs in the Support Hub.
-     */
+    
     initSupportHubTabs() {
         setTimeout(() => {
             const tabs = document.querySelectorAll('.action-tab');
@@ -132,14 +120,10 @@ const App = {
 
     // --- 5. FEATURE MODULES ---
 
-    /**
-     * Handles adding and displaying the trusted contact.
-     */
     initContactManagement() {
         const savedContacts = JSON.parse(localStorage.getItem('safelens_contacts') || '[]');
         this.state.trustedContacts = savedContacts;
         this.renderContacts();
-
         if (this.elements.addContactBtn) {
             this.elements.addContactBtn.addEventListener('click', () => {
                 const name = this.elements.newContactNameInput.value.trim();
@@ -171,9 +155,6 @@ const App = {
         }
     },
 
-    /**
-     * The main panic trigger. Gets location and opens the SMS app.
-     */
     triggerEmergency() {
         if (this.state.trustedContacts.length === 0) {
             alert("Please unlock the app (1111) and add an emergency contact first!");
@@ -187,18 +168,12 @@ const App = {
                 const locationUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
                 this.openSmsLink(locationUrl);
             },
-            (error) => {
-                this.openSmsLink("Location could not be found.");
-            },
+            (error) => { this.openSmsLink("Location could not be found."); },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
         this.resetCalculator();
     },
 
-    /**
-     * Creates the special sms: link and opens the user's default messaging app.
-     * @param {string} locationDetails - The Google Maps URL or an error message.
-     */
     openSmsLink(locationDetails) {
         const primaryContact = this.state.trustedContacts[0].phone;
         const customMessage = this.elements.alertMessageInput.value || "I'm in danger, please help!";
@@ -207,9 +182,6 @@ const App = {
         window.location.href = smsLink;
     },
     
-    /**
-     * Handles the manual voice recording and saves the file to the user's device.
-     */
     initVoiceAnalysis() {
         if (!this.elements.recordBtn) return;
         this.elements.recordBtn.addEventListener('click', () => {
@@ -218,54 +190,82 @@ const App = {
                     this.state.isRecording = true;
                     this.elements.recordBtn.classList.add('recording');
                     this.elements.voiceStatus.textContent = "Recording... Tap again to stop.";
+                    this.elements.saveForm.classList.add('hidden');
                     this.state.audioChunks = [];
                     this.state.mediaRecorder = new MediaRecorder(stream);
                     this.state.mediaRecorder.start();
                     this.state.mediaRecorder.addEventListener("dataavailable", event => { this.state.audioChunks.push(event.data); });
-                    this.state.mediaRecorder.addEventListener("stop", () => { stream.getTracks().forEach(track => track.stop()); this.saveRecordingToDevice(); });
+                    this.state.mediaRecorder.addEventListener("stop", () => { stream.getTracks().forEach(track => track.stop()); });
                 }).catch(err => { this.elements.voiceStatus.textContent = "Microphone access denied."; });
             } else {
-                if (this.state.mediaRecorder) {
-                    this.state.mediaRecorder.stop();
-                }
+                if (this.state.mediaRecorder) this.state.mediaRecorder.stop();
                 this.state.isRecording = false;
                 this.elements.recordBtn.classList.remove('recording');
-                this.elements.voiceStatus.textContent = "Preparing download...";
+                this.elements.voiceStatus.textContent = "Recording stopped. Add a note and save.";
+                this.elements.saveForm.classList.remove('hidden');
             }
         });
+        this.elements.saveToVaultBtn.addEventListener('click', () => this.saveToVault());
     },
 
-    /**
-     * This is the 100% reliable save feature. It creates a downloadable link
-     * for the recorded audio and triggers a download in the browser.
-     */
-    saveRecordingToDevice() {
+    saveToVault() {
+        const note = this.elements.recordingNoteInput.value;
         const audioBlob = new Blob(this.state.audioChunks, { type: 'audio/wav' });
-        const url = URL.createObjectURL(audioBlob);
-        const link = document.createElement('a');
-        link.style.display = 'none';
-        link.href = url;
-        link.download = `SafeLens_Recording_${new Date().getTime()}.wav`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        this.elements.voiceStatus.textContent = "Recording Downloaded!";
-        setTimeout(() => { if (!this.state.isRecording) { this.elements.voiceStatus.textContent = "Idle"; } }, 3000);
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = () => {
+            const audioDataUrl = reader.result;
+            const vault = JSON.parse(localStorage.getItem('safelens_vault') || '[]');
+            const newEntry = { id: new Date().getTime(), timestamp: new Date().toLocaleString(), note: note || 'No note added', audioDataUrl: audioDataUrl };
+            vault.unshift(newEntry);
+            localStorage.setItem('safelens_vault', JSON.stringify(vault));
+            this.elements.voiceStatus.textContent = "Saved to Vault!";
+            this.elements.saveForm.classList.add('hidden');
+            this.elements.recordingNoteInput.value = '';
+            setTimeout(() => { this.elements.voiceStatus.textContent = "Idle"; }, 2000);
+        };
     },
-    
-    /**
-     * Handles all the logic for the calculator interface.
-     */
+
+    renderVault() {
+        if (!this.elements.vaultList) return;
+        const vault = JSON.parse(localStorage.getItem('safelens_vault') || '[]');
+        this.elements.vaultList.innerHTML = '';
+        if (vault.length === 0) {
+            this.elements.vaultList.innerHTML = '<p>Your vault is empty. Record audio from the "Record Evidence" page to add items.</p>';
+            return;
+        }
+        vault.forEach(entry => {
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'vault-entry';
+            entryDiv.innerHTML = `<div class="vault-entry-header">${entry.timestamp}</div><p>"${entry.note}"</p><div class="vault-controls"><button class="play-btn" data-id="${entry.id}">Play</button><button class="delete-btn" data-id="${entry.id}">Delete</button></div>`;
+            this.elements.vaultList.appendChild(entryDiv);
+        });
+        this.elements.vaultList.querySelectorAll('.play-btn').forEach(btn => { btn.addEventListener('click', (e) => this.playFromVault(e.target.dataset.id)); });
+        this.elements.vaultList.querySelectorAll('.delete-btn').forEach(btn => { btn.addEventListener('click', (e) => this.deleteFromVault(e.target.dataset.id)); });
+    },
+
+    playFromVault(id) {
+        const vault = JSON.parse(localStorage.getItem('safelens_vault') || '[]');
+        const entry = vault.find(item => item.id == id);
+        if (entry) { const audio = new Audio(entry.audioDataUrl); audio.play(); }
+    },
+
+    deleteFromVault(id) {
+        if (!confirm("Are you sure you want to permanently delete this recording?")) return;
+        let vault = JSON.parse(localStorage.getItem('safelens_vault') || '[]');
+        vault = vault.filter(item => item.id != id);
+        localStorage.setItem('safelens_vault', JSON.stringify(vault));
+        this.renderVault();
+    },
+
     initCalculator() {
         if (this.elements.calculatorKeys.dataset.listenerAttached) return;
         this.elements.calculatorKeys.addEventListener('click', e => {
             const { key } = e.target.dataset;
             if (!key || !e.target.closest('.calculator-keys')) return;
             if (['add', 'subtract', 'multiply', 'divide', 'sign', 'percent', '.'].includes(key)) return;
-            if (key === 'clear') {
-                this.resetCalculator();
-            } else if (key === '=') {
+            if (key === 'clear') { this.resetCalculator(); }
+            else if (key === '=') {
                 if (this.state.displayValue === UNLOCK_CODE) { this.state.isUnlocked = true; this.updateView(); return; }
                 if (this.state.displayValue === PANIC_CODE) { this.triggerEmergency(); return; }
                 this.resetCalculator();
@@ -277,17 +277,8 @@ const App = {
         this.elements.calculatorKeys.dataset.listenerAttached = 'true';
     },
 
-    resetCalculator() {
-        this.state.displayValue = '0';
-        this.updateCalculatorDisplay();
-    },
-    
-    updateCalculatorDisplay() {
-        if (this.elements.calculatorDisplay) {
-            this.elements.calculatorDisplay.textContent = this.state.displayValue;
-        }
-    },
+    resetCalculator() { this.state.displayValue = '0'; this.updateCalculatorDisplay(); },
+    updateCalculatorDisplay() { if (this.elements.calculatorDisplay) { this.elements.calculatorDisplay.textContent = this.state.displayValue; } },
 };
 
-// Start the entire application.
 App.init();
