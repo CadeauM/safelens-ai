@@ -6,9 +6,7 @@
 ---
 
 ## 💡 The Problem
-
-In South Africa, a woman is murdered every 3 hours. In abusive situations, pulling out a phone or using a visible safety app can escalate danger. Victims need a silent,untraceable way to call for help, without alerting their abuser.
-The real problem: How do you ask for help when you're being watched?
+In South Africa, a woman is murdered every 3 hours. In abusive situations, pulling out a phone or using a visible safety app can escalate danger. Victims need a silent,untraceable way to call for help, without alerting their abuser. The real problem: How do you ask for help when you're being watched?
 ---
 
 ## ✅ The Solution: Safety in Disguise
